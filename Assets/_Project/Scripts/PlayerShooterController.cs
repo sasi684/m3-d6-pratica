@@ -9,13 +9,16 @@ public class PlayerShooterController : MonoBehaviour
     [SerializeField] private float _fireRange = 10f;
     [SerializeField] private float _fireRate = 1f;
     [SerializeField] private Bullet _bulletPrefab;
+    [SerializeField] private AudioClip _bulletShoot;
 
     private PlayerController _player;
+    private AudioSource _audioSource;
     private float lastShot = 0;
 
     private void Awake()
     {
         _player = GetComponent<PlayerController>();
+        _audioSource = GetComponentInChildren<AudioSource>();
     }
 
     void Update()
@@ -51,6 +54,8 @@ public class PlayerShooterController : MonoBehaviour
             bullet.transform.position = _player.transform.position;
             Vector2 direction = nearestEnemy.transform.position - bullet.transform.position;
             direction.Normalize();
+            _audioSource.clip = _bulletShoot;
+            _audioSource.Play();
             bullet.SetBullet(direction);
             lastShot = Time.time;
         }

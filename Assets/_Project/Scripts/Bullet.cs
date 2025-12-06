@@ -6,6 +6,7 @@ public class Bullet : MonoBehaviour
 {
     [SerializeField] private float _speed = 5f;
     [SerializeField] private Rigidbody2D _rb;
+
     private Vector2 _direction;
 
     public float Speed { get => _speed; set => _speed = value; }
