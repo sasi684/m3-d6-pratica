@@ -1,18 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class Enemy : MonoBehaviour
 {
     [SerializeField] private float _speed = 4f;
+    [SerializeField] private AudioClip _destroy;
 
-    private Rigidbody2D _rb;
+    private AudioSource _audioSource;
+
     private GameObject _player;
 
     private void Awake()
     {
-        _rb = GetComponent<Rigidbody2D>();
         _player = GameObject.FindGameObjectWithTag("Player");
+        _audioSource = GetComponentInChildren<AudioSource>();
     }
 
     private void Update()
@@ -27,7 +27,17 @@ public class Enemy : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if(collision.collider.CompareTag("Player"))
+        if(collision.gameObject.CompareTag("Player"))
             Destroy(collision.gameObject);
+        if (collision.gameObject.CompareTag("Bullet"))
+        {
+            LifeController enemyHp = GetComponent<LifeController>();
+            if (!enemyHp || enemyHp.GetHp() <= 0)
+            {
+                _audioSource.clip = _destroy;
+                _audioSource.Play();
+                Destroy(gameObject, _destroy.length);
+            }
+        }
     }
 }
